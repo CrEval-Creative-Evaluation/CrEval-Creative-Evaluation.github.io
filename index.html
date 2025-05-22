@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Evaluating Text Creativity across Diverse Domains: A Dataset and a Large Language Model Evaluator">
+  <meta name="keywords" content="CrEval, Creative Evaluation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Evaluating Text Creativity across Diverse Domains: A Dataset and a Large Language Model Evaluator</title>
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <!-- <script src="./static/css/bootstrap.min.css"></script> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+  <style>
+    .navbar-fixed-top {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    #mainNavbar {
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #mainNavbar.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .navbar-item {
+      color: #fff;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+    }
+
+    .navbar-item:hover {
+      background-color: #559ad3;
+    }
+
+    /* .t-right-bar {
+      position: fixed;
+      right: 0;
+      bottom: 10%;
+      width: 48px;
+      height: 48px;
+      z-index: 1000;
+      cursor: pointer;
+    }
+
+    .t-right-bar > div {
+      float: left;
+      height: 45px;
+      line-height: 45px;
+      margin-bottom: 1px;
+      border-radius: 20px 0 0 20px;
+      color: #fff;
+      padding-left: 25%;
+      clear: both;
+      white-space: nowrap;
+      font-size: 13px;
+      font-style: normal;
+      background-color: #aaa;
+      background-repeat: no-repeat;
+      transition: transform .2s cubic-bezier(.215, .61, .355, 1), padding .2s cubic-bezier(.215, .61, .355, 1), margin .2s cubic-bezier(.215, .61, .355, 1), background-color .2s cubic-bezier(.215, .61, .355, 1)
+    }
+
+    .t-right-bar > div.active, .t-right-bar > div:hover {
+      transform: translateX(-100%);
+      padding-right: 20px;
+      margin-left: 48px;
+      background-color: #23a0e1;
+      text-decoration: none;
+      color: #fff
+    }
+
+    .t-right-bar img {
+      height: 36px;
+      width: 36px;
+      vertical-align: middle;
+    } */
+  </style>
+
+  <script>
+    window.addEventListener('scroll', function () {
+      const navbar = document.getElementById('mainNavbar');
+      if (window.scrollY > 300) {
+        navbar.classList.add('hide');
+      } else {
+        navbar.classList.remove('hide');
+      }
+    });
+
+    // $(".t-right-bar").hide();
+    // $(function () {
+    //     $(window).scroll(function () {
+    //         if ($(window).scrollTop() > 1000) {
+    //             $(".t-right-bar").fadeIn(500);
+    //         }
+    //         else {
+    //             $(".t-right-bar").fadeOut(500);
+    //         }
+    //     });
+
+    //     $("#back-to-top").click(function () {
+    //         $('body,html').animate({scrollTop: 0}, 500);
+    //         return false;
+    //     });
+    // });
+  </script>
+
+</head>
+<body>
+
+
+<nav id="mainNavbar" class="navbar navbar-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #6aaae3; border-color: gray;">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#"><strong>CrEval</strong></a>
+  </div>
+
+  <div class="navbar-menu is-active">
+    <!-- <div class="navbar-start"> -->
+    <div class="navbar-start" style="margin: 0 auto; display: flex; justify-content: center; width: 100%;"></div>
+      <a class="navbar-item" href="#abstract" style="color: #4c3a88; font-weight: 500"><strong>Abstract</strong></a>
+      <a class="navbar-item" href="#CreataSet_and_CrEval" style="color: #4c3a88; font-weight: 500"><strong>CreataSet and CrEval</strong></a>
+      <a class="navbar-item" href="#data_construction" style="color: #4c3a88; font-weight: 500"><strong>Data Construction</strong></a>
+      <a class="navbar-item" href="#data_statistics" style="color: #4c3a88; font-weight: 500"><strong>Data Statistics</strong></a>
+      <a class="navbar-item" href="#results" style="color: #4c3a88; font-weight: 500"><strong>Results</strong></a>
+    </div>
+  </div>
+</nav>
+
+<!-- <div class="t-right-bar">
+  <div class="t-bar-rocket" id="back-to-top"><img src="./static/images/rocket.png">TOP</div>
+</div> -->
+
+
+
+<!--Centered Image Start-->
+<div style="text-align: center; margin-bottom: -40px; margin-top: 100px">
+  <img src="./static/images/favicon.svg" alt="CrEval" style="width:5%;height:5%;" class="center">
+</div>
+<!--Centered Image End-->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Evaluating Text Creativity across Diverse Domains: A Dataset and a Large Language Model Evaluator</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://aman-4-real.github.io/">Qian Cao</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://gsai.ruc.edu.cn/english/wangxt">Xiting Wang</a><sup>1*</sup>,</span>
+            <span class="author-block">
+              <a href="">Yuzhuo Yuan</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://yhlleo.github.io/">Yahui Liu</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://psych.bnu.edu.cn/szdw/zrjs/js/lf/index.htm">Fang Luo</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://gsai.ruc.edu.cn/english/rsong">Ruihua Song</a><sup>1*</sup>,
+            </span>
+          </div>
+
+          <br>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><b style="color:#AE0B2A; font-weight:normal">&#x25B6 </b>1. Gaoling School of Artificial Intelligence, Renmin University of China</span>
+            <br>
+            <span class="author-block"><b style="color:#0000FF; font-weight:normal">&#x25B6 </b>2. School of Psychology, Beijing Normal University</span>
+            <br>
+            <span class="author-block"><b style="color:#ED5D2A; font-weight:normal">&#x25B6 </b>3. Kuaishou Technology</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>*</sup>Correspondence</span>
+          </div>
+
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                  <a href="" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon"><i class="fab fa-github"></i></span>
+                      <span>Code (Coming soon)</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                  <a href="" target="" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">🤗</span>
+                      <span>Model (Coming soon)</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                  <a href="" target="" class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">🤗</span>
+                      <span>Dataset (Coming soon)</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified">
+          <p style="text-align: center;">  <!-- width: 130%; margin-left: -15%; -->
+            We introduce <strong style="color: blue;">CreataSet</strong>, a large-scale dataset of over 1M creative instruction-response pairs across 87 domains, and <strong style="color: blue;">CrEval</strong>, the 1st LLM-based evaluator for pairwise creativity evaluation, outperforming GPT-4o by 18.7% in human agreement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<section class="section" id="abstract">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Creativity evaluation remains a challenging frontier for large language models (LLMs).
+            Current evaluations heavily rely on inefficient and costly human judgments, hindering progress in enhancing machine creativity.
+            While automated methods exist, ranging from psychological testing to heuristic- or prompting-based approaches, they often lack generalizability or alignment with human judgment.
+          </p>
+          <p>
+            To address these issues, in this paper, we propose a novel pairwise-comparison framework for assessing textual creativity, leveraging shared contextual instructions to improve evaluation consistency.
+            We introduce <b>CreataSet</b>, a large-scale dataset with 100K+ human-level and 1M+ synthetic creative instruction-response pairs spanning diverse open-domain tasks.
+            Through training on <b>CreataSet</b>, we develop an LLM-based evaluator named <b>CrEval</b>. <b>CrEval</b> demonstrates remarkable superiority over existing methods in alignment with human judgments.
+          </p>
+          <p>
+            Experimental results underscore the indispensable significance of integrating both human-generated and synthetic data in training highly robust evaluators, and showcase the practical utility of <b>CrEval</b> in boosting the creativity of LLMs.
+            We will release all data, code, and models publicly soon to support further research.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+
+<section class="hero has-background-light">
+    <div class="hero-body">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-four-fifths">
+                    <div class="item">
+                        <img src="static/images/teaser.png" alt="teaser" />
+                        <p class="has-text-centered" style="font-size: 0.95rem; font-style: italic; margin-top: 0.5rem;">
+                            Figure 1. An example of how to formulate the problem of text creativity evaluation to better evaluate.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<section class="section" id="CreataSet_and_CrEval">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3"><strong>CreataSet</strong> and <strong>CrEval</strong></h2>
+                <div class="content has-text-justified">
+                    <ul>
+                        <li>We propose a <strong>context-aware, pairwise comparison-based</strong> evaluation protocol for assessing text creativity.
+                        Using this protocol, we manually annotate a test set of <strong>over 3K</strong> samples to benchmark text creativity evaluators.
+                        Notably, even state-of-the-art LLMs perform poorly on it compared to humans, underscoring a key performance bottleneck in current evaluators.
+                        To support training, we further construct <strong style="color: blue;">CreataSet</strong>, a large-scale dataset incorporating creative tasks in <strong>87 domains</strong>, including over <strong>1M instruction-response pairs</strong> with varying weakly supervised creativity levels.</li>
+                        <li>Based on CreataSet, we introduce <strong style="color: blue;">CrEval</strong>, an LLM-based creativity evaluator.
+                        To the best of our knowledge, this is the first evaluator capable of conducting pairwise creativity assessment across multiple domains.
+                        It outperforms strong proprietary models, e.g., GPT-4o by <strong>18.7%</strong> in agreement with human judges, and demonstrates strong domain generalization capabilities.
+                        We further show CrEval can enhance LLM creativity, presenting a viable approach to improve generative AI.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="hero has-background-light" id="data_construction">
+    <div class="hero-body">
+        <div class="container is-max-desktop is-centered has-text-centered">
+            <h2 class="title is-3">Data Construction</h2>
+            <div class="columns is-centered">
+                <div class="column is-four-fifths">
+                    <div class="item">
+                        <img src="static/images/flowchart.png" alt="flowchart" />
+                        <p class="has-text-centered" style="font-size: 0.95rem; font-style: italic; margin-top: 0.5rem;">
+                            Figure 2. The construction process of CreataSet and training process of CrEval.
+                        </p>
+                    </div>
+                    <br><br>
+                    <div class="item">
+                        <img src="static/images/combined_cases.png" alt="combined_cases" />
+                        <p class="has-text-centered" style="font-size: 0.95rem; font-style: italic; margin-top: 0.5rem;">
+                            Figure 3. The examples of three different types of data. The original data are above the dashed line, while our constructed components are below.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section class="section" id="data_statistics">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered">
+            <div class="column is-four-fifths has-text-centered">
+                <h1 class="title is-3">Data Statistics</h1>
+            </div>
+        </div>
+        <div class="columns is-centered">
+            <div class="column is-four-fifths content has-text-justified">
+                <div class="columns">
+                    <div class="column">
+                        <img src="static/images/domain_dist.png" alt="Domain Distribution">
+                        <p style="font-size: 0.95rem; font-style: italic; text-align: center;">Figure 3: Domain Distribution</p>
+                    </div>
+                    <div class="column">
+                        <br>
+                        <img src="static/images/semantic_dist.png" alt="Semantic Distribution">
+                        <p style="font-size: 0.95rem; font-style: italic; text-align: center;">Figure 4: Semantic Distribution</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <img src="static/images/length_dist.png" alt="Length Distribution">
+                    <p style="font-size: 0.95rem; font-style: italic; text-align: center;">Figure 5: Length Distribution</p>
+                </div>
+                <div class="column">
+                    <img src="static/images/length_dist2.png" alt="Length Distribution of Each Data Source">
+                    <p style="font-size: 0.95rem; font-style: italic; text-align: center;">Figure 6: Length Distribution of Each Data Source</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section class="hero has-background-light" id="results">
+    <div class="hero-body">
+        <div class="container is-max-desktop is-centered has-text-centered">
+            <h2 class="title is-3">Results</h2>
+            <div class="columns is-centered">
+                <div class="column is-four-fifths">
+                    <div class="item">
+                        <img src="static/images/table_res.png" alt="results" />
+                        <p class="has-text-centered" style="font-size: 0.95rem; font-style: italic; margin-top: 0.5rem;">
+                            Figure 7. Results of different methods on our CreataSet test set. Best results in the same group are highlighted in bold, and the second-best are underlined. S.T., Lyr., A.P., M.P., Pro., Oog., Ruo., and Inf. represent Short Texts, Lyrics, Ancient Poetry, Modern Poetry, Prose, Oogiri-Go, Ruozhiba, and Infinity-Instruct, respectively. We gray out the results of proprietary LLMs due to their larger sizes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p class="has-text-centered">
+            This website is borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>, <a href="https://next-gpt.github.io/">NExT-GPT</a>, <a href="https://llm-tuning-safety.github.io/">LLM Finetuning Risks</a>, <a href="https://vpgtrans.github.io/">VPGTrans</a> and licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+
+
