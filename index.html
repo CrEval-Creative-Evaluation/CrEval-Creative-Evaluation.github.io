@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description"
         content="Evaluating Text Creativity across Diverse Domains: A Dataset and a Large Language Model Evaluator">
   <meta name="keywords" content="CrEval, Creative Evaluation">
@@ -57,82 +58,73 @@
       background-color: #559ad3;
     }
 
-    /* .t-right-bar {
-      position: fixed;
-      right: 0;
-      bottom: 10%;
-      width: 48px;
-      height: 48px;
-      z-index: 1000;
-      cursor: pointer;
-    }
+    /* Update the sidebar styles */
+  #sideNavbar {
+    position: fixed;
+    top: 100px;
+    /* left: 0; */
+    right: 0;
+    left: auto;
+    width: auto;
+    background: transparent;
+    z-index: 999;
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
 
-    .t-right-bar > div {
-      float: left;
-      height: 45px;
-      line-height: 45px;
-      margin-bottom: 1px;
-      border-radius: 20px 0 0 20px;
-      color: #fff;
-      padding-left: 25%;
-      clear: both;
-      white-space: nowrap;
-      font-size: 13px;
-      font-style: normal;
-      background-color: #aaa;
-      background-repeat: no-repeat;
-      transition: transform .2s cubic-bezier(.215, .61, .355, 1), padding .2s cubic-bezier(.215, .61, .355, 1), margin .2s cubic-bezier(.215, .61, .355, 1), background-color .2s cubic-bezier(.215, .61, .355, 1)
-    }
+  #sideNavbar.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
-    .t-right-bar > div.active, .t-right-bar > div:hover {
-      transform: translateX(-100%);
-      padding-right: 20px;
-      margin-left: 48px;
-      background-color: #23a0e1;
-      text-decoration: none;
-      color: #fff
-    }
+  .menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family:  Georgia, Times, 'Times New Roman', serif;
+    align-items: flex-end; /* 使菜单项靠右对齐 */
+  }
 
-    .t-right-bar img {
-      height: 36px;
-      width: 36px;
-      vertical-align: middle;
-    } */
+  .menu .menu-list a {
+    color: rgb(101, 101, 247, 0.1);
+    font-weight: 700;
+    display: block;
+    padding: 20px 20px 20px 15px;
+    width: 140px;
+    text-align: center;
+    border-radius: 10px 0 0 10px;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    position: relative;
+    right: 0; /* 初始位置 */
+    box-sizing: border-box;
+  }
+
+  .menu .menu-list a:hover {
+    color: rgba(101, 101, 247, 1);
+    background-color: rgba(106, 170, 227, 0.3);
+    padding: 20px 40px 20px 20px;
+    width: 170px;
+    right: 0;
+  }
+
+  .menu .menu-list a.is-active {
+    color: #fff !important;
+    background-color: #6aaae3;
+  }
+
   </style>
-
-  <script>
-    window.addEventListener('scroll', function () {
-      const navbar = document.getElementById('mainNavbar');
-      if (window.scrollY > 300) {
-        navbar.classList.add('hide');
-      } else {
-        navbar.classList.remove('hide');
-      }
-    });
-
-    // $(".t-right-bar").hide();
-    // $(function () {
-    //     $(window).scroll(function () {
-    //         if ($(window).scrollTop() > 1000) {
-    //             $(".t-right-bar").fadeIn(500);
-    //         }
-    //         else {
-    //             $(".t-right-bar").fadeOut(500);
-    //         }
-    //     });
-
-    //     $("#back-to-top").click(function () {
-    //         $('body,html').animate({scrollTop: 0}, 500);
-    //         return false;
-    //     });
-    // });
-  </script>
-
+  
 </head>
+
+
+
 <body>
 
 
-<nav id="mainNavbar" class="navbar navbar-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #6aaae3; border-color: gray;">
+<nav id="mainNavbar" class="navbar navbar-fixed-top" role="navigation" aria-label="main navigation" style="background-color: #6aaae3; border-color: gray; font-family:  Georgia, Times, 'Times New Roman', serif;">
   <div class="navbar-brand">
     <a class="navbar-item" href="#"><strong>CrEval</strong></a>
   </div>
@@ -140,11 +132,11 @@
   <div class="navbar-menu is-active">
     <!-- <div class="navbar-start"> -->
     <div class="navbar-start" style="margin: 0 auto; display: flex; justify-content: center; width: 100%;"></div>
-      <a class="navbar-item" href="#abstract" style="color: #4c3a88; font-weight: 500"><strong>Abstract</strong></a>
-      <a class="navbar-item" href="#CreataSet_and_CrEval" style="color: #4c3a88; font-weight: 500"><strong>CreataSet and CrEval</strong></a>
-      <a class="navbar-item" href="#data_construction" style="color: #4c3a88; font-weight: 500"><strong>Data Construction</strong></a>
-      <a class="navbar-item" href="#data_statistics" style="color: #4c3a88; font-weight: 500"><strong>Data Statistics</strong></a>
-      <a class="navbar-item" href="#results" style="color: #4c3a88; font-weight: 500"><strong>Results</strong></a>
+      <a class="navbar-item" href="#abstract" style="font-weight: 500"><strong>Abstract</strong></a>
+      <a class="navbar-item" href="#CreataSet_and_CrEval" style="font-weight: 500"><strong>CreataSet and CrEval</strong></a>
+      <a class="navbar-item" href="#data_construction" style="font-weight: 500"><strong>Data Construction</strong></a>
+      <a class="navbar-item" href="#data_statistics" style="font-weight: 500"><strong>Data Statistics</strong></a>
+      <a class="navbar-item" href="#results" style="font-weight: 500"><strong>Results</strong></a>
     </div>
   </div>
 </nav>
@@ -153,11 +145,26 @@
   <div class="t-bar-rocket" id="back-to-top"><img src="./static/images/rocket.png">TOP</div>
 </div> -->
 
+<!-- Side Navbar -->
+<aside id="sideNavbar" class="menu" style="position: fixed; top: 100px; right: 0; width: 140px; background: transparent; padding: 0px; z-index: 999; display: none;">
+  <ul class="menu-list">
+    <li><a href="#abstract" class="side-link">Abstract</a></li>
+    <li><a href="#CreataSet_and_CrEval" class="side-link">CreataSet and CrEval</a></li>
+    <li><a href="#data_construction" class="side-link">Data<br>Construction</a></li>
+    <li><a href="#data_statistics" class="side-link">Data<br>Statistics</a></li>
+    <li><a href="#results" class="side-link">Results</a></li>
+    <br><br><br><br><br>
+    <li><a id="topbutton" href="#" style="background: #abd4f8; margin-top: 50px; color: white; text-align: center; max-width: 80px; right: 0; position: relative;">👆<br>Top</a></li>
+  </ul>
+</aside>
+
+
+
 
 
 <!--Centered Image Start-->
 <div style="text-align: center; margin-bottom: -40px; margin-top: 100px">
-  <img src="./static/images/favicon.svg" alt="CrEval" style="width:5%;height:5%;" class="center">
+  <img src="./static/images/favicon.svg" alt="CrEval" style="width:100px;height:100px;" class="center">
 </div>
 <!--Centered Image End-->
 
@@ -443,6 +450,76 @@
     </div>
   </div>
 </footer>
+
+
+
+<script>
+  const navbar = document.getElementById('mainNavbar');
+  const sideNavbar = document.getElementById('sideNavbar');
+  const sections = ['abstract', 'CreataSet_and_CrEval', 'data_construction', 'data_statistics', 'results'];
+  const links = document.querySelectorAll('.side-link');
+  
+  let scrollTimeout;
+  let isMouseMoving = false;
+
+  // Add mousemove event listener to detect user activity
+  document.addEventListener('mousemove', function() {
+    isMouseMoving = true;
+    clearTimeout(scrollTimeout);
+    sideNavbar.style.opacity = '1';
+    sideNavbar.style.pointerEvents = 'auto';
+    
+    // Set timeout to fade out after 3 seconds of inactivity
+    scrollTimeout = setTimeout(function() {
+      sideNavbar.style.opacity = '0';
+      sideNavbar.style.pointerEvents = 'none';
+      isMouseMoving = false;
+    }, 3000);
+  });
+
+  window.addEventListener('scroll', function () {
+    const scrollY = window.scrollY;
+
+    // 切换主导航和侧边栏的显示
+    if (scrollY > 300) {
+      navbar.classList.add('hide');
+      sideNavbar.style.display = 'block';
+      sideNavbar.style.opacity = '1';
+      sideNavbar.style.pointerEvents = 'auto';
+      clearTimeout(scrollTimeout);
+      
+      // Set timeout to fade out after 3 seconds of inactivity
+      if (!isMouseMoving) {
+        scrollTimeout = setTimeout(function() {
+          sideNavbar.style.opacity = '0';
+          sideNavbar.style.pointerEvents = 'none';
+        }, 3000);
+      }
+    } else {
+      navbar.classList.remove('hide');
+      sideNavbar.style.display = 'none';
+      clearTimeout(scrollTimeout);
+    }
+
+    // 高亮当前 section 的链接
+    let current = '';
+    for (const id of sections) {
+      const section = document.getElementById(id);
+      if (section && section.offsetTop <= scrollY + 100) {
+        current = id;
+      }
+    }
+
+    links.forEach(link => {
+      link.classList.remove('is-active');
+      if (link.getAttribute('href') === `#${current}`) {
+        link.classList.add('is-active');
+      }
+    });
+
+  });
+</script>
+
 
 </body>
 </html>
